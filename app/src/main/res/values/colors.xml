@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cream_25">#FFFDF9</color>
+    <color name="cream_50">#FFF8ED</color>
+    <color name="cream_100">#F9EDDA</color>
+    <color name="ink">#261914</color>
+    <color name="ink_soft">#6E5C53</color>
+    <color name="burgundy_950">#3D0712</color>
+    <color name="burgundy_900">#57091A</color>
+    <color name="burgundy_800">#720E22</color>
+    <color name="burgundy_700">#8D142B</color>
+    <color name="gold_700">#976C17</color>
+    <color name="gold_500">#C9952B</color>
+    <color name="white">#FFFFFF</color>
+</resources>

@@ -1,0 +1,8 @@
+{
+  "name": "ابزارهای هوشمند پزشکی دکتر کبیریزاده",
+  "description": "ابزارهای تعاملی ارزیابی BMI، مقایسه جراحی چاقی، رهگیری وزن، تغذیه، بیمه و مشاوره پزشکی.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
