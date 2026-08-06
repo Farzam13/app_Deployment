@@ -239,30 +239,17 @@ fun ResultViewCard(
                 lineHeight = 26.sp
             )
 
-            // BMI Orb display if available
+            // BMI Gauge Chart display if available
             val bmiStr = output.resultData["bmi"]
             if (bmiStr != null) {
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.linearGradient(
-                                listOf(Burgundy700, Burgundy950)
-                            )
-                        )
-                        .align(Alignment.CenterHorizontally),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "BMI", fontSize = 11.sp, color = Gold200)
-                        Text(
-                            text = bmiStr,
-                            fontWeight = FontWeight.Black,
-                            fontSize = 26.sp,
-                            color = Color.White
-                        )
-                    }
+                val bmiValue = bmiStr.toFloatOrNull()
+                if (bmiValue != null) {
+                    BmiGaugeChart(
+                        bmi = bmiValue,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(vertical = 12.dp)
+                    )
                 }
             }
 
@@ -475,6 +462,139 @@ fun YesNoRadioGroup(
                     selectedLabelColor = Color.White
                 )
             )
+        }
+    }
+}
+
+@Composable
+fun BmiGaugeChart(bmi: Float, modifier: Modifier = Modifier) {
+    val gaugeColors = listOf(
+        Color(0xFF3498DB), // Underweight (<18.5)
+        Color(0xFF2E8B57), // Normal (18.5 - 24.9)
+        Color(0xFFF1C40F), // Overweight (25 - 29.9)
+        Color(0xFFE67E22), // Obese Class 1 (30 - 34.9)
+        Color(0xFFE74C3C), // Obese Class 2 (35 - 39.9)
+        Color(0xFF8E44AD)  // Obese Class 3 (>= 40)
+    )
+    
+    // Normalizing between BMI 15 to 45
+    val minBmi = 15f
+    val maxBmi = 45f
+    val normalized = ((bmi - minBmi) / (maxBmi - minBmi)).coerceIn(0f, 1f)
+    val angleDegrees = 180f + (normalized * 180f)
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .width(200.dp)
+                .height(110.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize().padding(10.dp)) {
+                val strokeWidth = 16.dp.toPx()
+                val radius = size.width / 2f
+                val center = androidx.compose.ui.geometry.Offset(size.width / 2f, size.height)
+
+                val segmentSweep = 180f / gaugeColors.size
+                var currentAngle = 180f
+                for (color in gaugeColors) {
+                    drawArc(
+                        color = color,
+                        startAngle = currentAngle,
+                        sweepAngle = segmentSweep,
+                        useCenter = false,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(
+                            width = strokeWidth,
+                            cap = androidx.compose.ui.graphics.StrokeCap.Butt
+                        ),
+                        size = androidx.compose.ui.geometry.Size(size.width, size.width),
+                        topLeft = androidx.compose.ui.geometry.Offset(0f, size.height - radius)
+                    )
+                    currentAngle += segmentSweep
+                }
+
+                val needleLength = radius - strokeWidth - 10.dp.toPx()
+                val needleAngleRad = Math.toRadians(angleDegrees.toDouble())
+                val endX = center.x + needleLength * kotlin.math.cos(needleAngleRad).toFloat()
+                val endY = center.y + needleLength * kotlin.math.sin(needleAngleRad).toFloat()
+
+                drawLine(
+                    color = Ink,
+                    start = center,
+                    end = androidx.compose.ui.geometry.Offset(endX, endY),
+                    strokeWidth = 4.dp.toPx(),
+                    cap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+
+                drawCircle(
+                    color = Ink,
+                    radius = 8.dp.toPx(),
+                    center = center
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "BMI: ${String.format(java.util.Locale.US, "%.1f", bmi)}",
+            fontWeight = FontWeight.Black,
+            fontSize = 24.sp,
+            color = Ink
+        )
+        
+        val category = when {
+            bmi < 18.5f -> "کمبود وزن"
+            bmi < 25f -> "وزن طبیعی"
+            bmi < 30f -> "اضافه وزن"
+            bmi < 35f -> "چاقی کلاس ۱"
+            bmi < 40f -> "چاقی کلاس ۲"
+            else -> "چاقی کلاس ۳ (مفرط)"
+        }
+        
+        Text(
+            text = category,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = InkSoft
+        )
+        
+        Spacer(modifier = Modifier.height(12.dp))
+        
+        val tip = when {
+            bmi < 18.5f -> "بهتر است با یک متخصص تغذیه برای دریافت برنامه غذایی مناسب و افزایش وزن سالم مشورت کنید."
+            bmi < 25f -> "وضعیت وزنی شما در محدوده سالم قرار دارد. با حفظ رژیم غذایی متعادل و فعالیت بدنی منظم، این روند را ادامه دهید."
+            bmi < 30f -> "توصیه می‌شود با افزایش فعالیت‌های فیزیکی و رعایت رژیم غذایی سالم، به سمت وزن ایده‌آل حرکت کنید."
+            bmi < 35f -> "در این مرحله، مشورت با پزشک متخصص برای بررسی وضعیت سلامت عمومی و دریافت برنامه کاهش وزن ضروری است."
+            bmi < 40f -> "خطر ابتلا به بیماری‌های متابولیک بالا است. بررسی گزینه‌های درمانی تخصصی و مشاوره پزشکی توصیه می‌شود."
+            else -> "اقدام جدی برای مدیریت وزن تحت نظر تیم پزشکی و بررسی گزینه‌های درمانی مانند جراحی چاقی برای حفظ سلامت ضروری است."
+        }
+        
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = DrkTurquoise.copy(alpha = 0.1f)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = androidx.compose.material.icons.Icons.Default.Info,
+                    contentDescription = "نکته سلامتی",
+                    tint = DrkTurquoiseDark,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = tip,
+                    fontSize = 13.sp,
+                    color = Ink,
+                    style = androidx.compose.ui.text.TextStyle(lineHeight = 20.sp)
+                )
+            }
         }
     }
 }

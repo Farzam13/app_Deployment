@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -299,6 +300,18 @@ fun ToolDetailScreen(
                             FormNumberField(label = "قد (سانتی‌متر)", value = heightCm, onValueChange = { heightCm = it }, unit = "cm")
                             FormNumberField(label = "وزن روز عمل (کیلوگرم)", value = surgeryWeightKg, onValueChange = { surgeryWeightKg = it }, unit = "kg")
                             FormNumberField(label = "وزن فعلی (کیلوگرم)", value = currentWeightKg, onValueChange = { currentWeightKg = it }, unit = "kg")
+                            
+                            Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedButton(
+                                onClick = { onNavigateToRoute("bmi_history") },
+                                modifier = Modifier.fillMaxWidth().height(50.dp),
+                                shape = RoundedCornerShape(14.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Burgundy800),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Burgundy800)
+                            ) {
+                                Icon(Icons.Outlined.ShowChart, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+                                Text("مشاهده نمودار تاریخچه BMI", fontWeight = FontWeight.Bold)
+                            }
                         }
 
                         ToolId.POST_OP_NUTRITION -> {

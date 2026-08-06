@@ -2,31 +2,47 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Cream25 = Color(0xFFFFFDF9)
-val Cream50 = Color(0xFFFFF8ED)
-val Cream100 = Color(0xFFF9EDDA)
-val Cream200 = Color(0xFFECD9BD)
+val DrkInk = Color(0xFF06191D)
+val DrkCharcoal = Color(0xFF0A2024)
+val DrkTurquoise = Color(0xFF10AEB2)
+val DrkTurquoiseDark = Color(0xFF087B80)
+val DrkGold = Color(0xFFD5A62E)
+val DrkGoldSoft = Color(0xFFF0D98D)
+val DrkSurface = Color(0xFFFFFFFF)
+val DrkBackground = Color(0xFFF4F8F8)
+val DrkText = Color(0xFF102E33)
+val DrkMuted = Color(0xFF677B7F)
+val DrkBorder = Color(0xFFDCE8E9)
+val DrkDanger = Color(0xFFB84A4A)
+val DrkSuccess = Color(0xFF2E8B68)
 
-val Ink = Color(0xFF261914)
-val InkSoft = Color(0xFF6E5C53)
+// Aliases for existing uses in the app so we don't break everything, or we can just replace the usages.
+val Cream25 = DrkBackground
+val Cream50 = Color(0xFFEAF2F2)
+val Cream100 = Color(0xFFDCE8E9)
+val Cream200 = DrkBorder
 
-val Burgundy950 = Color(0xFF3D0712)
-val Burgundy900 = Color(0xFF57091A)
-val Burgundy800 = Color(0xFF720E22)
-val Burgundy700 = Color(0xFF8D142B)
-val Burgundy100 = Color(0xFFF7E4E8)
+val Ink = DrkInk
+val InkSoft = DrkMuted
 
-val Gold700 = Color(0xFF976C17)
-val Gold500 = Color(0xFFC9952B)
-val Gold200 = Color(0xFFECD7A5)
+val Burgundy950 = DrkCharcoal
+val Burgundy900 = DrkCharcoal
+val Burgundy800 = DrkTurquoiseDark
+val Burgundy700 = DrkTurquoise
+val Burgundy100 = Color(0xFFE0F4F4)
 
-val SuccessGreen = Color(0xFF1E6A4B)
-val SuccessBg = Color(0xFFE9F5EF)
+val Gold700 = DrkGold
+val Gold500 = DrkGold
+val Gold200 = DrkGoldSoft
 
-val AttentionAmber = Color(0xFF9B5E0F)
-val AttentionBg = Color(0xFFFFF4DC)
+val SuccessGreen = DrkSuccess
+val SuccessBg = Color(0xFFE3F0EA)
 
-val DangerRed = Color(0xFFAE1926)
-val DangerBg = Color(0xFFFFF0F1)
+val AttentionAmber = DrkGold
+val AttentionBg = Color(0xFFFDF7E6)
 
-val BorderColor = Color(0x2B754A2F)
+val DangerRed = DrkDanger
+val DangerBg = Color(0xFFF6E4E4)
+
+val BorderColor = DrkBorder
+

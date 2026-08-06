@@ -18,6 +18,7 @@ object Routes {
     const val TOOLS_HUB = "tools"
     const val TOOL_DETAIL = "tool/{slug}"
     const val ADMIN = "admin"
+    const val BMI_HISTORY = "bmi_history"
 
     fun toolDetail(slug: String) = "tool/$slug"
 }
@@ -53,17 +54,33 @@ fun NavGraph(
             arguments = listOf(navArgument("slug") { type = NavType.StringType })
         ) { backStackEntry ->
             val slug = backStackEntry.arguments?.getString("slug") ?: "bmi-assessment"
-            ToolDetailScreen(
-                slug = slug,
-                repository = repository,
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToRoute = { route ->
-                    if (route == "tools") {
-                        navController.navigate(Routes.TOOLS_HUB)
-                    } else {
-                        navController.navigate(Routes.toolDetail(route))
+            if (slug == "smart-consultation") {
+                com.example.ui.screens.AppointmentBookingScreen(
+                    repository = repository,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            } else {
+                ToolDetailScreen(
+                    slug = slug,
+                    repository = repository,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToRoute = { route ->
+                        if (route == "tools") {
+                            navController.navigate(Routes.TOOLS_HUB)
+                        } else if (route == "bmi_history") {
+                            navController.navigate(Routes.BMI_HISTORY)
+                        } else {
+                            navController.navigate(Routes.toolDetail(route))
+                        }
                     }
-                }
+                )
+            }
+        }
+
+        composable(Routes.BMI_HISTORY) {
+            com.example.ui.screens.BmiHistoryScreen(
+                repository = repository,
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
